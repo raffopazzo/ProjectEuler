@@ -56,7 +56,7 @@ function range(n) {
 /**
  * Check whether the given number is even or not.
  */
-function isEven(n) { return n % 2; }
+function isEven(n) { return n % 2 == 0; }
 
 /**
  * Check whether the given number is odd or not.
@@ -74,7 +74,7 @@ PROBLEMS = [
         title: "Even Fibonacci numbers",
         solve: function() {
           var fibonacci_numbers = [];
-          var i = 0;
+          var i = 1;
           while (fibonacci(i) <= 4000000) {
             fibonacci_numbers.push(fibonacci(i));
             i++;
