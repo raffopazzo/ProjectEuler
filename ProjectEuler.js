@@ -262,6 +262,16 @@ PROBLEMS = [
           });
           return max;
         }
+    },
+    {
+        title: "Sum square difference",
+        solve: function() {
+          var N = 100;
+          return Math.pow(range(1, N+1).reduce(sum),2)-
+                 range(1, N+1).map(function(n) {
+                   return n*n;
+                 }).reduce(sum);
+        }
     }
 ];
 
