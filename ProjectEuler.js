@@ -103,7 +103,7 @@ function divisors(n) {
   if (n == 1) return result;
   result.push(n);
   var sqrt_n = Math.floor(Math.sqrt(n));
-  for (var i=2; i < sqrt_n; i++) {
+  for (var i=2; i <= sqrt_n; i++) {
     if (n % i == 0) {
       result.push(i);
       result.push(n/i);
@@ -230,6 +230,20 @@ PROBLEMS = [
         title: "Smallest multiple",
         solve: function() {
           return range(1,21).reduce(least_common_multiple);
+        }
+    },
+    {
+        title: "10001st prime",
+        solve: function() {
+          var result = [2];
+          var n = 3;
+          while (result.length < 10001) {
+            if (isPrime(n)) {
+              result.push(n);
+            }
+            n += 2;
+          }
+          return result[result.length-1];
         }
     }
 ];
