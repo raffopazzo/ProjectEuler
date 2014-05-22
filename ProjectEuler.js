@@ -1,10 +1,40 @@
 /**
- * Add an Array.isEqual method to check whether two arrays 
+ * Add an Array.equals method to check whether two arrays 
  * contain the same values.
  */
-Array.prototype.isEqual = Array.prototype.isEqual || function(that) {
+Array.prototype.equals = Array.prototype.equals || function(that) {
   return this.length == that.length
       && this.every(function(n) { return that.indexOf(n) >= 0; });
+}
+
+/**
+ * Add an Array.max method to return the maximum element.
+ */
+Array.prototype.max = Array.prototype.max || function(that) {
+  return Math.max.apply(this, this);
+}
+
+/**
+ * Add an Array.cartesianProduct method to return the cartesian 
+ * product of two arrays. 
+ */
+Array.prototype.cartesianProduct = Array.prototype.cartesianProduct || function(that) {
+    var result = [];
+    this.forEach(function(x) {
+        that.forEach(function(y) {
+            result.push([x,y]);
+        });
+    });
+    return result;
+}
+
+/**
+ * Add a String.reverse method to reverse a string.
+ */
+String.prototype.reverse = String.prototype.reverse || function() {
+    var chars = [];
+    for (var c in this) { if(this.hasOwnProperty(c)) chars.unshift(this[c]); }
+    return chars.join("");
 }
 
 /**
@@ -44,6 +74,11 @@ function multiples(n, max) {
 function sum(a, b) { return a + b; }
 
 /**
+ * Return the product of two numbers
+ */
+function multiply(a, b) { return a * b; }
+
+/**
  * Return the n-th Fibonacci number.
  */
 function fibonacci(n) {
@@ -81,9 +116,18 @@ function divisors(n) {
 /**
  * Return an array of integer values from 0 to n (n excluded).
  */
-function range(n) {
+function range() {
+  switch (arguments.length) {
+  case 1: from = 0; to = arguments[0]; break;
+  case 2: from = arguments[0]; to = arguments[1]; break;
+  }
+
   var result = [];
-  for (var i = 0; i < n; i++) result.push(i);
+  if (from < to) {
+      for (var i = from; i < to; i++) result.push(i);
+  } else {
+      for (var i = from; i >= to; i--) result.push(i);
+  }
   return result;
 }
 
@@ -104,7 +148,14 @@ function isPrime(n) {
   if (n == 1) return false;
   if (n == 2) return true;
   if (isEven(n)) return false;
-  return divisors(n).isEqual([1,n]);
+  return divisors(n).equals([1,n]);
+}
+
+/**
+ * Check whether the given number is palindrome or not.
+ */
+function isPalindrome(n) {
+    return Number(n).toString().reverse() === Number(n).toString();
 }
 
 PROBLEMS = [
@@ -129,7 +180,29 @@ PROBLEMS = [
     {
         title: "Largest prime factor",
         solve: function() {
-          return Math.max.apply(this, primeFactors(600851475143));
+          return primeFactors(600851475143).max();
+        }
+    },
+    {
+        title: "Largest palindrome product",
+        solve: function() {
+            var max = 0;
+            range(999, 100).forEach(function(a) {
+                try { // Allow pre-emption of the following forEach()
+                    range(a, 100).forEach(function(b) {
+                        var t = a * b;
+                        if (t < max) {
+                            throw true; /* preempt */
+                        } else if (isPalindrome(t)){
+                            max = Math.max(max, t);
+                            throw true; /* preempt */
+                        }
+                    });
+                } catch (e) { 
+                    if (e !== true) throw e;
+                }
+            });
+            return max;
         }
     }
 ];
@@ -143,7 +216,7 @@ jQuery(document).ready(function() {
 
     function problem(p) {
         var div = jQuery('<div class="problem"><h1>'+p.title+'</h1></div>');
-        var button = jQuery('<button>Soluzione</button>');
+        var button = jQuery('<button>Solve</button>');
         var solution = jQuery('<p class="solution"></p>');
         div.append(button);
         div.append(solution);
