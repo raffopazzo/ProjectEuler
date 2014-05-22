@@ -158,6 +158,27 @@ function isPalindrome(n) {
     return Number(n).toString().reverse() === Number(n).toString();
 }
 
+/**
+ * Return the greatest common divisor of two numbers.
+ */
+function greatest_common_divisor(a, b) {
+  if (b == 0) return a;
+  var r = a % b;
+  while (r != 0) {
+    a = b;
+    b = r;
+    r = a % b;
+  }
+  return b;
+}
+
+/**
+ * Return the least common multiple of two numbers.
+ */
+function least_common_multiple(a, b) {
+  return (a/greatest_common_divisor(a,b))*b;
+}
+
 PROBLEMS = [
     {
         title: "Multiples of 3 and 5",
@@ -203,6 +224,12 @@ PROBLEMS = [
                 }
             });
             return max;
+        }
+    },
+    {
+        title: "Smallest multiple",
+        solve: function() {
+          return range(1,21).reduce(least_common_multiple);
         }
     }
 ];
