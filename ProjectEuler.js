@@ -38,6 +38,17 @@ String.prototype.reverse = String.prototype.reverse || function() {
 }
 
 /**
+ * Hide all the enumrable properties of an object's prototype.
+ */
+function hideProperties(o) {
+    var hidden = {enumerable: false };
+    for (i in o) Object.defineProperty(o.constructor.prototype, i, hidden);
+}
+
+hideProperties(new Array());
+hideProperties(new String());
+
+/**
  * Memoize the given function, that is returns a new function 
  * which has a cache of all the previously computed values of 
  * the input function. 
@@ -118,17 +129,32 @@ function divisors(n) {
  */
 function range() {
   switch (arguments.length) {
-  case 1: from = 0; to = arguments[0]; break;
-  case 2: from = arguments[0]; to = arguments[1]; break;
+  case 1: from = 0;            to = arguments[0]; step = 1;                    break;
+  case 2: from = arguments[0]; to = arguments[1]; step = (from < to) ? 1 : -1; break;
+  case 3: from = arguments[0]; to = arguments[1]; step = arguments[2];         break;
   }
 
   var result = [];
   if (from < to) {
-      for (var i = from; i < to; i++) result.push(i);
+      for (var i = from; i < to; i+=step) result.push(i);
   } else {
-      for (var i = from; i >= to; i--) result.push(i);
+      for (var i = from; i >= to; i+=step) result.push(i);
   }
   return result;
+}
+
+/**
+ * Return an array with all the prime numbers up to max.
+ */
+function primes(max) {
+    var sieve = range(max+1);
+    range(2, Math.sqrt(max)+1).forEach(function(k) {
+        if (sieve[k] === 0) return;
+        range(2*k, max+1, k).forEach(function(k) {
+            sieve[k] = 0;
+        });
+    });
+    return sieve.filter(function(n) { return n > 1 });
 }
 
 /**
@@ -245,6 +271,12 @@ PROBLEMS = [
                 throw e;
             }
         }
+    },
+    {
+        title: "Summation of primes",
+        solve: function() {
+            return primes(2000000).reduce(sum);
+        }
     }
 ];
 
@@ -261,7 +293,10 @@ jQuery(document).ready(function() {
         var solution = jQuery('<p class="solution"></p>');
         div.append(button);
         div.append(solution);
-        button.click(function() { solution.text(""+p.solve()); });
+        button.click(function() {
+            solution.text("Computing...");
+            setTimeout(function(){ solution.text(""+p.solve()); }, 50);
+        });
         return div;
     }
 });
