@@ -158,6 +158,32 @@ function isPalindrome(n) {
     return Number(n).toString().reverse() === Number(n).toString();
 }
 
+/**
+ * Check whether three integers a,b,c such that a < b < c forms 
+ * a Pythagorean triplet.
+ */
+function isPythagoreanTriplet(a, b, c) {
+    if ([a,b,c].some(not(isInteger))) return false;
+    return a*a + b*b === c*c;
+}
+
+/**
+ * Check whether a given number is integer.
+ */
+function isInteger(n) {
+    return n === Math.floor(n);
+}
+
+/**
+ * Return a new function which negates the result of the input 
+ * function. 
+ */
+function not(f) {
+    return function() {
+        return !f.apply(this, arguments);
+    }
+}
+
 PROBLEMS = [
     {
         title: "Multiples of 3 and 5",
@@ -204,6 +230,21 @@ PROBLEMS = [
             });
             return max;
         }
+    },
+    {
+        title: "Special Pythagorean triplet",
+        solve: function() {
+            try {
+                range(1, 250).forEach(function(a) {
+                    var b = (500000 - 1000*a) / (1000 - a);
+                    var c = Math.sqrt(a*a + b*b);
+                    if (isPythagoreanTriplet(a, b, c)) throw a*b*c;
+                });
+            } catch (e) {
+                if (typeof e === "number") return e;
+                throw e;
+            }
+        }
     }
 ];
 
@@ -220,7 +261,7 @@ jQuery(document).ready(function() {
         var solution = jQuery('<p class="solution"></p>');
         div.append(button);
         div.append(solution);
-        button.click(function() { solution.text(p.solve()); });
+        button.click(function() { solution.text(""+p.solve()); });
         return div;
     }
 });
