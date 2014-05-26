@@ -222,6 +222,17 @@ function collatz_sequence_length(n) {
 collatz_sequence_length = memoize(collatz_sequence_length);
 
 /**
+ * Return the number of Lattice paths from the top-left to the
+ * bottom-right corner of a MxN grid.
+ */
+function lattice_paths(m, n) {
+  if (m == 0 || n == 0) return 1;
+  return lattice_paths(m-1,n) + lattice_paths(m,n-1);
+}
+
+lattice_paths = memoize(lattice_paths);
+
+/**
  * Return an array with all the prime factors of a given number.
  */
 function primeFactors(n) {
@@ -645,6 +656,12 @@ PROBLEMS = [
             }
           });
           return max;
+        }
+    },
+    {
+        title: "Lattice paths",
+        solve: function() {
+          return lattice_paths(20, 20);
         }
     }
 ];
