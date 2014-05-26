@@ -221,13 +221,13 @@ function divisors(n) {
   var result = [1];
   if (n == 1) return result;
   result.push(n);
-  var sqrt_n = Math.floor(Math.sqrt(n));
-  for (var i=2; i <= sqrt_n; i++) {
+  for (var i=2; i < Math.sqrt(n); i++) {
     if (n % i == 0) {
       result.push(i);
       result.push(n/i);
     }
   }
+  var sqrt_n = Math.floor(Math.sqrt(n));
   if (n == sqrt_n * sqrt_n) result.push(sqrt_n);
   return result;
 }
@@ -498,7 +498,19 @@ PROBLEMS = [
                        });
                    })).map(function(a) { return a.max(); }).max();
         }
-    }
+    },
+    {
+        title: "Highly divisible triangular number",
+        solve: function() {
+          function triangularNumber(n) { return n*(n+1)/2; }
+          var th = 500;
+          var n = 1;
+          while (divisors(triangularNumber(n)).length < th) {
+            n++
+          }
+          return triangularNumber(n);
+        }
+    },
 ];
 
 jQuery(document).ready(function() {
