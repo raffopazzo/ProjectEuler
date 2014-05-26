@@ -663,6 +663,12 @@ PROBLEMS = [
         solve: function() {
           return lattice_paths(20, 20);
         }
+    },
+    {
+        title: "Power digit sum",
+        solve: function() {
+          return bigInt(2).pow(1000).toString().toArrayOfNumbers().reduce(sum);
+        }
     }
 ];
 
