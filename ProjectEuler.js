@@ -703,7 +703,18 @@ PROBLEMS = [
         solve: function() {
           return range(1,1001).map(number_to_letters).reduce(sum).length;
         }
+    },
+    {
+        title: "Factorial digit sum",
+        solve: function() {
+          function fact(n) {
+            if (n.lesser(2)) return 1;
+            return n.multiply(fact(n.minus(1)));
+          }
+          return fact(bigInt(100)).toString().toArrayOfNumbers().reduce(sum);
+        }
     }
+
 ];
 
 jQuery(document).ready(function() {
