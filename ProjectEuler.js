@@ -255,14 +255,17 @@ function range() {
  * Return an array with all the prime numbers up to max.
  */
 function primes(max) {
-    var sieve = range(max+1);
-    range(2, Math.sqrt(max)+1).forEach(function(k) {
-        if (sieve[k] === 0) return;
-        range(2*k, max+1, k).forEach(function(k) {
-            sieve[k] = 0;
+  if (max < 2) return undefined;
+  if (max == 2) return [2];
+  var sieve = range(Math.ceil(max/2)); /* consider only odd numbers */
+    range(1, Math.ceil(Math.sqrt(max)/2)).forEach(function(i) {
+        if (sieve[i] === 0) return;
+        range(2*i*(i+1), Math.ceil(max/2), 2*i+1).forEach(function(j) {
+            sieve[j] = 0;
         });
     });
-    return sieve.filter(function(n) { return n > 1 });
+    return [2].concat(sieve.filter(function(n) { return n > 0 })
+                           .map(function(i) { return 2*i + 1; }));
 }
 
 /**
@@ -460,7 +463,7 @@ PROBLEMS = [
     {
         title: "Summation of primes",
         solve: function() {
-            return primes(2000000).reduce(sum);
+          return primes(2000000).reduce(sum);
         }
     },
     {
@@ -513,7 +516,14 @@ jQuery(document).ready(function() {
         div.append(solution);
         button.click(function() {
             solution.text("Computing...");
-            setTimeout(function(){ solution.text(""+p.solve()); }, 50);
+            setTimeout(function() {
+                         try{
+                           solution.text(""+p.solve());
+                         } catch (e) { 
+                           solution.text(e);
+                         }
+                       },
+                       50);
         });
         return div;
     }
