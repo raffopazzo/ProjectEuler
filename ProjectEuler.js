@@ -168,7 +168,9 @@ function memoize(f) {
     for (var i = 1; i < arguments.length; i++) {
       key += "," + arguments[i];
     }
-    if (key in cache) return cache[key];
+    if (key in cache) {
+      return cache[key];
+    }
     var val = f.apply(this, arguments);
     cache[key] = val;
     return val;
@@ -206,6 +208,18 @@ function fibonacci(n) {
 }
 
 fibonacci = memoize(fibonacci);
+
+/**
+ * Return the length of the Collats sequence starting at the 
+ * given number.
+ */
+function collatz_sequence_length(n) {
+  if (n == 1) return 1;
+
+  return 1 + collatz_sequence_length(isEven(n) ? n/2 : 3*n + 1);
+}
+
+collatz_sequence_length = memoize(collatz_sequence_length);
 
 /**
  * Return an array with all the prime factors of a given number.
@@ -617,6 +631,20 @@ PROBLEMS = [
           return str.map(function(s){ return bigInt(s); })
                     .reduce(function(a, b) { return a.add(b); }, bigInt.zero)
                     .toString().slice(0,10);
+        }
+    },
+    {
+        title: "Longest Collatz sequence",
+        solve: function() {
+          var max, longest = 0;
+          range(1, 1000000).forEach(function(n) {
+            var l = collatz_sequence_length(n);
+            if (l > longest) {
+              longest = l;
+              max = n;
+            }
+          });
+          return max;
         }
     }
 ];
